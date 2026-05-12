@@ -8,6 +8,8 @@ title: go-leiden — How We Build It
 **The native Go implementation of the Leiden community detection algorithm.**  
 Built entirely by autonomous AI agents. Zero human code commits.
 
+**v0.1.0 — the first synthetic Go library.** 609 turns · 2h 49m wall-clock · 4,340 lines of Go · ported from [graspologic-native](https://github.com/graspologic-org/graspologic-native) (Rust, Microsoft Research).
+
 → [GitHub Repository](https://github.com/k8nstantin/go-leiden) · [OpenPraxis](https://github.com/k8nstantin/OpenPraxis)
 
 ---
@@ -72,15 +74,18 @@ The agent running M2/T1 knows: the product it's contributing to, where M2 fits i
 
 ---
 
-## Manifests
+## Manifests — all completed in v0.1.0
 
 | | Component | GitHub Issue | Status |
 |---|---|---|---|
-| [M1](manifests/m1) | Core data structures | [#1](https://github.com/k8nstantin/go-leiden/issues/1) | 🔄 In progress |
-| [M2](manifests/m2) | Algorithm phases | [#2](https://github.com/k8nstantin/go-leiden/issues/2) | ⏳ Pending |
-| [M3](manifests/m3) | Quality functions | [#3](https://github.com/k8nstantin/go-leiden/issues/3) | ⏳ Pending |
-| [M4](manifests/m4) | Public API | [#4](https://github.com/k8nstantin/go-leiden/issues/4) | ⏳ Pending |
-| [M5](manifests/m5) | Test suite | [#5](https://github.com/k8nstantin/go-leiden/issues/5) | ⏳ Pending |
+| [M1](manifests/m1) | Core data structures | [#1](https://github.com/k8nstantin/go-leiden/issues/1) | ✅ Completed |
+| [M2](manifests/m2) | Algorithm phases | [#2](https://github.com/k8nstantin/go-leiden/issues/2) | ✅ Completed |
+| [M3](manifests/m3) | Quality functions | [#3](https://github.com/k8nstantin/go-leiden/issues/3) | ✅ Completed |
+| [M4](manifests/m4) | Public API | [#4](https://github.com/k8nstantin/go-leiden/issues/4) | ✅ Completed |
+| [M5](manifests/m5) | Test suite | [#5](https://github.com/k8nstantin/go-leiden/issues/5) | ✅ Completed |
+| M6 | PR #6 review-fix iteration | (in PR #6 / #7) | ✅ Completed |
+
+**Totals:** 609 agent turns · 2h 49m wall-clock · 4,340 lines of Go · 0 human commits.
 
 ---
 
@@ -113,13 +118,15 @@ Tests against pass rate → keep if improves ≥5%
 Task retries with better prompt
 ```
 
-### Why this is the case study
+### Why this was the case study
 
-go-leiden answers: **can autonomous agents build a production Go library — from algorithm specification to published package — without human code commits?**
+go-leiden asked: **can autonomous agents build a production Go library — from algorithm specification to published package — without human code commits?**
 
-The algorithm is well-specified (graspologic-native Rust source). The test target is clear (karate club graph). The quality bar is measurable (go test, go vet, benchmarks). Every step is logged, every failure is traced, every improvement is recorded.
+The algorithm was well-specified (graspologic-native Rust source). The test target was clear (karate club graph). The quality bar was measurable (go test, go vet, benchmarks). Every step was logged, every failure was traced, every improvement was recorded.
 
-This is eating our own dog food: we built the feedback loop to improve agents, and that same loop is now building an open-source library.
+**v0.1.0 is the answer: yes.** 609 turns, 2h 49m wall-clock, zero human commits — go-leiden is, to our knowledge, the first complete open-source Go library ported end-to-end by autonomous AI agents from a product DAG.
+
+This was eating our own dog food: we built the feedback loop to improve agents, and that same loop built this open-source library.
 
 ---
 
