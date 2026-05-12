@@ -144,6 +144,8 @@ This is not a human-authored codebase. go-leiden is built entirely by **autonomo
 
 ### The product DAG
 
+![go-leiden Product DAG](assets/dag.png)
+
 Every component is modelled as an entity in the OpenPraxis graph. The build is a directed acyclic graph of manifests (components) and tasks (implementation units):
 
 ```
