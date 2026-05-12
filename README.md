@@ -231,17 +231,17 @@ go-leiden is the answer in progress. The algorithm is well-specified (graspologi
 
 ## Build status
 
-→ **[How we build it — prompts, DAG, feedback loop](docs/index.md)**
+Each step is a manifest — one branch, one PR, one review before the next fires. Click any step to read the full agent prompt.
 
-| # | Manifest | Component | Status |
-|---|---|---|---|
-| [M1](docs/manifests/m1.md) | Core data structures | CompactNetwork, Clustering, Edge | 🔄 In progress |
-| [M2](docs/manifests/m2.md) | Algorithm phases | local-move, refinement, aggregation | ⏳ Pending M1 |
-| [M3](docs/manifests/m3.md) | Quality functions | Modularity, CPM | ⏳ Pending M2 |
-| [M4](docs/manifests/m4.md) | Public API | Leiden(), HierarchicalLeiden(), go.mod | ⏳ Pending M3 |
-| [M5](docs/manifests/m5.md) | Test suite | Validation, benchmarks, fuzz | ⏳ Pending M4 |
+| Step | What it builds | Task | Issue | Status |
+|---|---|---|---|---|
+| [M1 — Core data structures](docs/manifests/m1.md) | `CompactNetwork` (CSR adjacency list), `Clustering`, `Edge` types, error sentinels. The foundation everything else builds on. | [T1 — Implement CompactNetwork, Clustering, Edge](docs/manifests/m1.md#task-t1--implement-compactnetwork-clustering-edge-types-errors) | [#1](https://github.com/k8nstantin/go-leiden/issues/1) | 🔄 In progress |
+| [M2 — Algorithm phases](docs/manifests/m2.md) | The three Leiden phases: local-move (greedy), refinement (the Leiden innovation over Louvain), aggregation (recursive contraction). | [T1 — Implement three phases](docs/manifests/m2.md#task-t1--implement-local-move-refinement-aggregation-phases) | [#2](https://github.com/k8nstantin/go-leiden/issues/2) | ⏳ After M1 |
+| [M3 — Quality functions](docs/manifests/m3.md) | Modularity and CPM scoring + resolution scaling (graspologic-native corrected formula). | [T1 — Implement Modularity and CPM](docs/manifests/m3.md#task-t1--implement-modularity-and-cpm-quality-functions) | [#3](https://github.com/k8nstantin/go-leiden/issues/3) | ⏳ After M2 |
+| [M4 — Public API](docs/manifests/m4.md) | `Leiden()`, `HierarchicalLeiden()` (used by Microsoft GraphRAG), `Modularity()`. Sets up `go.mod` and README. | [T1 — Implement public API](docs/manifests/m4.md#task-t1--implement-public-api--gomod) | [#4](https://github.com/k8nstantin/go-leiden/issues/4) | ⏳ After M3 |
+| [M5 — Tests + benchmarks](docs/manifests/m5.md) | Karate club validation, 10k-node benchmarks (< 5s), fuzz testing. The publication gate. | [T1 — Write test suite](docs/manifests/m5.md#task-t1--write-test-suite-benchmarks-fuzz-tests) | [#5](https://github.com/k8nstantin/go-leiden/issues/5) | ⏳ After M4 |
 
-GitHub issues: [#1 M1](../../issues/1) · [#2 M2](../../issues/2) · [#3 M3](../../issues/3) · [#4 M4](../../issues/4) · [#5 M5](../../issues/5)
+→ [How autonomous agents build this — prompts, DAG, feedback loop](docs/index.md)
 
 ---
 
