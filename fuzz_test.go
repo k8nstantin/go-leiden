@@ -1,6 +1,22 @@
+// Copyright (c) 2026 Constantin Alexander <constantin@dedomena.io>. All rights reserved.
+// Use of this source code is governed by the MIT License that can be found in the LICENSE file.
+//
+
+
+// You may obtain a copy of the License at
+//
+
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+
+
 package leiden
 
 import (
+	"context"
 	"encoding/binary"
 	"math"
 	"testing"
@@ -66,7 +82,7 @@ func FuzzLeiden(f *testing.F) {
 		opts.Seed = seed
 		opts.MaxIterations = 20 // bound work per fuzz iteration
 
-		res, err := Leiden(n, decodeEdges(edgeBlob, n), opts)
+		res, err := Leiden(context.Background(), n, decodeEdges(edgeBlob, n), opts)
 		if err != nil {
 			return
 		}
@@ -111,7 +127,7 @@ func FuzzHierarchicalLeiden(f *testing.F) {
 		opts.Seed = seed
 		opts.MaxIterations = 10
 
-		res, err := HierarchicalLeiden(n, decodeEdges(edgeBlob, n), opts)
+		res, err := HierarchicalLeiden(context.Background(), n, decodeEdges(edgeBlob, n), opts)
 		if err != nil {
 			return
 		}

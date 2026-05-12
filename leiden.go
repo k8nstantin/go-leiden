@@ -1,6 +1,7 @@
 package leiden
 
 import (
+	"context"
 	"fmt"
 	"math/rand"
 )
@@ -120,7 +121,7 @@ const defaultMaxIterations = 100
 //
 // Reference: Traag, Waltman & van Eck, "From Louvain to Leiden: guaranteeing
 // well-connected communities", Scientific Reports 9:5233 (2019).
-func Leiden(nNodes int, edges []Edge, opts Options) (Result, error) {
+func Leiden(ctx context.Context, nNodes int, edges []Edge, opts Options) (Result, error) {
 	res, err := runLeiden(nNodes, edges, opts)
 	if err != nil {
 		return Result{}, err
@@ -134,7 +135,7 @@ func Leiden(nNodes int, edges []Edge, opts Options) (Result, error) {
 // a community dendrogram or selecting a resolution after the fact).
 //
 // HierarchicalLeiden has the same input contract as [Leiden].
-func HierarchicalLeiden(nNodes int, edges []Edge, opts Options) (HierarchicalResult, error) {
+func HierarchicalLeiden(ctx context.Context, nNodes int, edges []Edge, opts Options) (HierarchicalResult, error) {
 	return runLeiden(nNodes, edges, opts)
 }
 
@@ -222,4 +223,27 @@ func projectToOriginal(origToCurrent []int, parent *Clustering, nNodes int) *Clu
 	cl, _ := NewClusteringFromAssignment(a)
 	cl.Normalize()
 	return cl
+}
+
+// GroupBy returns a map from cluster ID to the sorted slice of node IDs in that cluster.
+//
+//   communities := leiden.GroupBy(result.Partition)
+//   for id, nodes := range communities {
+//       fmt.Printf("cluster %d: %v\n", id, nodes)
+//   }
+func GroupBy(partition []int) map[int][]int {
+	out := make(map[int][]int)
+	for node, cluster := range partition {
+		out[cluster] = append(out[cluster], node)
+	}
+	return out
+}
+
+// CommunityCount returns the number of distinct communities in the partition.
+func CommunityCount(partition []int) int {
+	seen := make(map[int]struct{}, len(partition))
+	for _, c := range partition {
+		seen[c] = struct{}{}
+	}
+	return len(seen)
 }

@@ -1,6 +1,7 @@
 package leiden
 
 import (
+	"context"
 	"math/rand"
 	"testing"
 )
@@ -43,9 +44,9 @@ func TestValidation_KarateClub_ModularityWithinPublishedRange(t *testing.T) {
 		opts := DefaultOptions()
 		opts.Resolution = gamma
 		opts.Seed = 1
-		res, err := Leiden(n, edges, opts)
+		res, err := Leiden(context.Background(), n, edges, opts)
 		if err != nil {
-			t.Fatalf("Leiden(γ=%g): %v", gamma, err)
+			t.Fatalf("Leiden(context.Background(), γ=%g): %v", gamma, err)
 		}
 		mod, err := Modularity(n, edges, res.Partition, 1.0)
 		if err != nil {
@@ -83,9 +84,9 @@ func TestValidation_KarateClub_PartitionCountWithinPublishedRange(t *testing.T) 
 			opts := DefaultOptions()
 			opts.Resolution = gamma
 			opts.Seed = seed
-			res, err := Leiden(n, edges, opts)
+			res, err := Leiden(context.Background(), n, edges, opts)
 			if err != nil {
-				t.Fatalf("Leiden(γ=%g, seed=%d): %v", gamma, seed, err)
+				t.Fatalf("Leiden(context.Background(), γ=%g, seed=%d): %v", gamma, seed, err)
 			}
 			counts[res.NumClusters] = true
 		}
@@ -112,7 +113,7 @@ func TestValidation_PlantedPartition_RecoversAboveThreshold(t *testing.T) {
 	opts := DefaultOptions()
 	opts.Resolution = 0.05
 	opts.Seed = 42
-	res, err := Leiden(n, edges, opts)
+	res, err := Leiden(context.Background(), n, edges, opts)
 	if err != nil {
 		t.Fatalf("Leiden: %v", err)
 	}
@@ -139,11 +140,11 @@ func TestValidation_HierarchicalLeiden_LevelsMatchSingleLeiden(t *testing.T) {
 		opts := DefaultOptions()
 		opts.Resolution = 0.1
 		opts.Seed = seed
-		flat, err := Leiden(n, edges, opts)
+		flat, err := Leiden(context.Background(), n, edges, opts)
 		if err != nil {
 			t.Fatalf("Leiden: %v", err)
 		}
-		hier, err := HierarchicalLeiden(n, edges, opts)
+		hier, err := HierarchicalLeiden(context.Background(), n, edges, opts)
 		if err != nil {
 			t.Fatalf("HierarchicalLeiden: %v", err)
 		}
@@ -183,7 +184,7 @@ func TestValidation_QualityMonotonicAcrossLevels(t *testing.T) {
 	opts := DefaultOptions()
 	opts.Resolution = 0.1
 	opts.Seed = 5
-	res, err := HierarchicalLeiden(n, edges, opts)
+	res, err := HierarchicalLeiden(context.Background(), n, edges, opts)
 	if err != nil {
 		t.Fatalf("HierarchicalLeiden: %v", err)
 	}

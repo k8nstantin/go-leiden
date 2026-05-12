@@ -1,6 +1,7 @@
 package leiden
 
 import (
+	"context"
 	"math/rand"
 	"testing"
 )
@@ -24,14 +25,14 @@ func makeBenchFixture(b *testing.B, nPerBlock int, pIn, pOut float64) benchPlant
 // 100 nodes, dense intra-block connectivity, light inter-block noise.
 func BenchmarkLeiden_PlantedPartition_100(b *testing.B) {
 	fx := makeBenchFixture(b, 25, 0.6, 0.05)
-	benchmarkLeiden(b, fx)
+	benchmarkLeiden(context.Background(), b, fx)
 }
 
 // BenchmarkLeiden_PlantedPartition_1k covers a medium graph used to stress
 // the local-move / refinement / aggregation loop interactions.
 func BenchmarkLeiden_PlantedPartition_1k(b *testing.B) {
 	fx := makeBenchFixture(b, 250, 0.05, 0.001)
-	benchmarkLeiden(b, fx)
+	benchmarkLeiden(context.Background(), b, fx)
 }
 
 // BenchmarkLeiden_PlantedPartition_10k stresses the large-graph regime;
@@ -39,7 +40,7 @@ func BenchmarkLeiden_PlantedPartition_1k(b *testing.B) {
 // seconds rather than minutes.
 func BenchmarkLeiden_PlantedPartition_10k(b *testing.B) {
 	fx := makeBenchFixture(b, 2500, 0.01, 0.0001)
-	benchmarkLeiden(b, fx)
+	benchmarkLeiden(context.Background(), b, fx)
 }
 
 // BenchmarkHierarchicalLeiden_PlantedPartition_1k measures the hierarchical
@@ -51,7 +52,7 @@ func BenchmarkHierarchicalLeiden_PlantedPartition_1k(b *testing.B) {
 	opts.Seed = 1
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := HierarchicalLeiden(fx.nNodes, fx.edges, opts)
+		_, err := HierarchicalLeiden(context.Background(), fx.nNodes, fx.edges, opts)
 		if err != nil {
 			b.Fatalf("HierarchicalLeiden: %v", err)
 		}
@@ -99,20 +100,20 @@ func BenchmarkLeiden_KarateClub(b *testing.B) {
 	opts.Seed = 1
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := Leiden(n, edges, opts)
+		_, err := Leiden(context.Background(), n, edges, opts)
 		if err != nil {
 			b.Fatalf("Leiden: %v", err)
 		}
 	}
 }
 
-func benchmarkLeiden(b *testing.B, fx benchPlantedFixture) {
+func benchmarkLeiden(ctx context.Context, b *testing.B, fx benchPlantedFixture) {
 	opts := DefaultOptions()
 	opts.Resolution = 0.05
 	opts.Seed = 1
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := Leiden(fx.nNodes, fx.edges, opts)
+		_, err := Leiden(context.Background(), fx.nNodes, fx.edges, opts)
 		if err != nil {
 			b.Fatalf("Leiden: %v", err)
 		}

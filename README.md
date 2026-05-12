@@ -72,33 +72,40 @@ Requires Go 1.22+. Zero external dependencies.
 package main
 
 import (
+    "context"
     "fmt"
     leiden "github.com/k8nstantin/go-leiden"
 )
 
 func main() {
-    // Two tight clusters connected by a weak bridge
+    // 6 nodes: two tight triangles connected by a weak bridge
+    // Nodes are integers 0..5
     edges := []leiden.Edge{
-        {Source: "auth.Login",   Target: "auth.Verify",   Weight: 1.0},
-        {Source: "auth.Login",   Target: "auth.Session",  Weight: 1.0},
-        {Source: "auth.Verify",  Target: "auth.Session",  Weight: 1.0},
-        {Source: "db.Query",     Target: "db.Connect",    Weight: 1.0},
-        {Source: "db.Query",     Target: "db.Cache",      Weight: 1.0},
-        {Source: "db.Connect",   Target: "db.Cache",      Weight: 1.0},
-        {Source: "auth.Session", Target: "db.Connect",    Weight: 0.05}, // weak bridge
+        {From: 0, To: 1, Weight: 1.0},
+        {From: 1, To: 2, Weight: 1.0},
+        {From: 0, To: 2, Weight: 1.0},
+        {From: 3, To: 4, Weight: 1.0},
+        {From: 4, To: 5, Weight: 1.0},
+        {From: 3, To: 5, Weight: 1.0},
+        {From: 2, To: 3, Weight: 0.01}, // weak bridge
     }
 
-    result, err := leiden.Leiden(edges, leiden.DefaultOptions())
+    opts := leiden.DefaultOptions()
+    opts.Seed = 42 // deterministic
+
+    result, err := leiden.Leiden(context.Background(), 6, edges, opts)
     if err != nil {
         panic(err)
     }
 
     fmt.Printf("Quality: %.4f\n", result.Quality)
-    for node, cluster := range result.Partition {
-        fmt.Printf("  %-20s → cluster %d\n", node, cluster)
+    fmt.Printf("Communities: %d\n", leiden.CommunityCount(result.Partition))
+
+    for clusterID, nodes := range leiden.GroupBy(result.Partition) {
+        fmt.Printf("  cluster %d: nodes %v\n", clusterID, nodes)
     }
-    // auth.* → cluster 0
-    // db.*   → cluster 1
+    // cluster 0: nodes [0 1 2]
+    // cluster 1: nodes [3 4 5]
 }
 ```
 
