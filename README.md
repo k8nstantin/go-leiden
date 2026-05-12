@@ -229,13 +229,15 @@ go-leiden is the answer in progress. The algorithm is well-specified (graspologi
 
 ## Build status
 
+→ **[How we build it — prompts, DAG, feedback loop](docs/index.md)**
+
 | # | Manifest | Component | Status |
 |---|---|---|---|
-| [M1](https://k8nstantin.github.io/go-leiden/manifests/m1) | Core data structures | CompactNetwork, Clustering, Edge | 🔄 In progress |
-| [M2](https://k8nstantin.github.io/go-leiden/manifests/m2) | Algorithm phases | local-move, refinement, aggregation | ⏳ Pending M1 |
-| [M3](https://k8nstantin.github.io/go-leiden/manifests/m3) | Quality functions | Modularity, CPM | ⏳ Pending M2 |
-| [M4](https://k8nstantin.github.io/go-leiden/manifests/m4) | Public API | Leiden(), HierarchicalLeiden(), go.mod | ⏳ Pending M3 |
-| [M5](https://k8nstantin.github.io/go-leiden/manifests/m5) | Test suite | Validation, benchmarks, fuzz | ⏳ Pending M4 |
+| [M1](docs/manifests/m1.md) | Core data structures | CompactNetwork, Clustering, Edge | 🔄 In progress |
+| [M2](docs/manifests/m2.md) | Algorithm phases | local-move, refinement, aggregation | ⏳ Pending M1 |
+| [M3](docs/manifests/m3.md) | Quality functions | Modularity, CPM | ⏳ Pending M2 |
+| [M4](docs/manifests/m4.md) | Public API | Leiden(), HierarchicalLeiden(), go.mod | ⏳ Pending M3 |
+| [M5](docs/manifests/m5.md) | Test suite | Validation, benchmarks, fuzz | ⏳ Pending M4 |
 
 GitHub issues: [#1 M1](../../issues/1) · [#2 M2](../../issues/2) · [#3 M3](../../issues/3) · [#4 M4](../../issues/4) · [#5 M5](../../issues/5)
 
