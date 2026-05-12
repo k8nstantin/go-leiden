@@ -47,7 +47,7 @@ We chose graspologic-native over the original [leidenalg](https://github.com/vtr
 | igraph dependency | ✓ (500k+ lines C) | ✗ | ✗ |
 | External deps | Yes | No | **Zero** |
 | Static binary | No | Yes | **Yes** |
-| Production use | Research | Microsoft GraphRAG | OpenPraxis + you |
+| Production use | Research | Microsoft GraphRAG | **Research** |
 | Resolution formula | Reference impl | Corrected¹ | **Corrected¹** |
 
 > ¹ graspologic-native identified and corrected a resolution scaling bug in the original CWTSLeiden Java reference implementation. go-leiden uses the corrected formula.
