@@ -5,7 +5,7 @@ title: go-leiden — How We Build It
 
 # go-leiden
 
-**The first native Go implementation of the Leiden community detection algorithm.**  
+**The native Go implementation of the Leiden community detection algorithm.**  
 Built entirely by autonomous AI agents. Zero human code commits.
 
 → [GitHub Repository](https://github.com/k8nstantin/go-leiden) · [OpenPraxis](https://github.com/k8nstantin/OpenPraxis)
