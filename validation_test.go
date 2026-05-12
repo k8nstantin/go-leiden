@@ -1,6 +1,21 @@
+// Copyright 2026 Constantin Alexander
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package leiden
 
 import (
+	"context"
 	"math/rand"
 	"testing"
 )
@@ -43,11 +58,11 @@ func TestValidation_KarateClub_ModularityWithinPublishedRange(t *testing.T) {
 		opts := DefaultOptions()
 		opts.Resolution = gamma
 		opts.Seed = 1
-		res, err := Leiden(n, edges, opts)
+		res, err := Leiden(context.Background(), n, edges, opts)
 		if err != nil {
 			t.Fatalf("Leiden(γ=%g): %v", gamma, err)
 		}
-		mod, err := Modularity(n, edges, res.Partition, 1.0)
+		mod, err := Modularity(context.Background(), n, edges, res.Partition, 1.0)
 		if err != nil {
 			t.Fatalf("Modularity(γ=%g): %v", gamma, err)
 		}
@@ -83,7 +98,7 @@ func TestValidation_KarateClub_PartitionCountWithinPublishedRange(t *testing.T) 
 			opts := DefaultOptions()
 			opts.Resolution = gamma
 			opts.Seed = seed
-			res, err := Leiden(n, edges, opts)
+			res, err := Leiden(context.Background(), n, edges, opts)
 			if err != nil {
 				t.Fatalf("Leiden(γ=%g, seed=%d): %v", gamma, seed, err)
 			}
@@ -112,7 +127,7 @@ func TestValidation_PlantedPartition_RecoversAboveThreshold(t *testing.T) {
 	opts := DefaultOptions()
 	opts.Resolution = 0.05
 	opts.Seed = 42
-	res, err := Leiden(n, edges, opts)
+	res, err := Leiden(context.Background(), n, edges, opts)
 	if err != nil {
 		t.Fatalf("Leiden: %v", err)
 	}
@@ -139,11 +154,11 @@ func TestValidation_HierarchicalLeiden_LevelsMatchSingleLeiden(t *testing.T) {
 		opts := DefaultOptions()
 		opts.Resolution = 0.1
 		opts.Seed = seed
-		flat, err := Leiden(n, edges, opts)
+		flat, err := Leiden(context.Background(), n, edges, opts)
 		if err != nil {
 			t.Fatalf("Leiden: %v", err)
 		}
-		hier, err := HierarchicalLeiden(n, edges, opts)
+		hier, err := HierarchicalLeiden(context.Background(), n, edges, opts)
 		if err != nil {
 			t.Fatalf("HierarchicalLeiden: %v", err)
 		}
@@ -183,7 +198,7 @@ func TestValidation_QualityMonotonicAcrossLevels(t *testing.T) {
 	opts := DefaultOptions()
 	opts.Resolution = 0.1
 	opts.Seed = 5
-	res, err := HierarchicalLeiden(n, edges, opts)
+	res, err := HierarchicalLeiden(context.Background(), n, edges, opts)
 	if err != nil {
 		t.Fatalf("HierarchicalLeiden: %v", err)
 	}

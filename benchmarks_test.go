@@ -1,6 +1,21 @@
+// Copyright 2026 Constantin Alexander
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package leiden
 
 import (
+	"context"
 	"math/rand"
 	"testing"
 )
@@ -51,7 +66,7 @@ func BenchmarkHierarchicalLeiden_PlantedPartition_1k(b *testing.B) {
 	opts.Seed = 1
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := HierarchicalLeiden(fx.nNodes, fx.edges, opts)
+		_, err := HierarchicalLeiden(context.Background(), fx.nNodes, fx.edges, opts)
 		if err != nil {
 			b.Fatalf("HierarchicalLeiden: %v", err)
 		}
@@ -83,7 +98,7 @@ func BenchmarkModularity_PlantedPartition_1k(b *testing.B) {
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := Modularity(fx.nNodes, fx.edges, partition, 1.0)
+		_, err := Modularity(context.Background(), fx.nNodes, fx.edges, partition, 1.0)
 		if err != nil {
 			b.Fatalf("Modularity: %v", err)
 		}
@@ -99,7 +114,7 @@ func BenchmarkLeiden_KarateClub(b *testing.B) {
 	opts.Seed = 1
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := Leiden(n, edges, opts)
+		_, err := Leiden(context.Background(), n, edges, opts)
 		if err != nil {
 			b.Fatalf("Leiden: %v", err)
 		}
@@ -112,7 +127,7 @@ func benchmarkLeiden(b *testing.B, fx benchPlantedFixture) {
 	opts.Seed = 1
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := Leiden(fx.nNodes, fx.edges, opts)
+		_, err := Leiden(context.Background(), fx.nNodes, fx.edges, opts)
 		if err != nil {
 			b.Fatalf("Leiden: %v", err)
 		}

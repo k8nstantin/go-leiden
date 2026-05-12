@@ -1,6 +1,23 @@
+// Copyright 2026 Constantin Alexander
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package leiden
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+)
 
 // Modularity computes the generalised Newman modularity Q of a partition on
 // a weighted, undirected graph:
@@ -21,12 +38,23 @@ import "fmt"
 // Returns 0 with a nil error for the degenerate case of a graph with zero
 // total edge weight (no edges and no self-loops).
 //
+// ctx is checked once before scoring. If it is already cancelled, Modularity
+// returns 0 and ctx.Err(). Pass [context.Background] for an uncancelable
+// call.
+//
 // Errors:
+//   - [ErrNilContext] if ctx is nil.
 //   - [ErrInvalidNodeCount] if nNodes is non-positive.
 //   - [ErrAssignmentLength] if len(partition) != nNodes.
 //   - [ErrNegativeClusterID] if any partition entry is negative.
 //   - [ErrNodeOutOfRange] or [ErrNegativeEdgeWeight] if an edge is invalid.
-func Modularity(nNodes int, edges []Edge, partition []int, gamma float64) (float64, error) {
+func Modularity(ctx context.Context, nNodes int, edges []Edge, partition []int, gamma float64) (float64, error) {
+	if ctx == nil {
+		return 0, ErrNilContext
+	}
+	if err := ctx.Err(); err != nil {
+		return 0, err
+	}
 	if len(partition) != nNodes {
 		return 0, fmt.Errorf("%w: got %d, want %d", ErrAssignmentLength, len(partition), nNodes)
 	}

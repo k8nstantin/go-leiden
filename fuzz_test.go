@@ -1,6 +1,21 @@
+// Copyright 2026 Constantin Alexander
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package leiden
 
 import (
+	"context"
 	"encoding/binary"
 	"math"
 	"testing"
@@ -66,7 +81,7 @@ func FuzzLeiden(f *testing.F) {
 		opts.Seed = seed
 		opts.MaxIterations = 20 // bound work per fuzz iteration
 
-		res, err := Leiden(n, decodeEdges(edgeBlob, n), opts)
+		res, err := Leiden(context.Background(), n, decodeEdges(edgeBlob, n), opts)
 		if err != nil {
 			return
 		}
@@ -111,7 +126,7 @@ func FuzzHierarchicalLeiden(f *testing.F) {
 		opts.Seed = seed
 		opts.MaxIterations = 10
 
-		res, err := HierarchicalLeiden(n, decodeEdges(edgeBlob, n), opts)
+		res, err := HierarchicalLeiden(context.Background(), n, decodeEdges(edgeBlob, n), opts)
 		if err != nil {
 			return
 		}
@@ -154,7 +169,7 @@ func FuzzModularity(f *testing.F) {
 		if math.IsNaN(gamma) || math.IsInf(gamma, 0) || gamma < -10 || gamma > 10 {
 			return
 		}
-		q, err := Modularity(n, decodeEdges(edgeBlob, n), decodePartition(partBlob, n), gamma)
+		q, err := Modularity(context.Background(), n, decodeEdges(edgeBlob, n), decodePartition(partBlob, n), gamma)
 		if err != nil {
 			return
 		}
