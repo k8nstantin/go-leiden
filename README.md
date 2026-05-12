@@ -140,6 +140,21 @@ for _, hc := range result {
 
 ## How this library is built — autonomous AI agents
 
+## The case study — first agentic OS reverse-engineer and language port
+
+This is the **first documented case** of an autonomous agentic OS using AI agents to reverse-engineer a production library and port it from one language to another — without a single human code commit.
+
+**[graspologic-native](https://github.com/graspologic-org/graspologic-native)** (Rust, Microsoft Research) → **[go-leiden](https://github.com/k8nstantin/go-leiden)** (Go)
+
+Orchestrated entirely by **[OpenPraxis](https://github.com/k8nstantin/OpenPraxis)** — a peer-to-peer agentic OS that runs autonomous coding agents.
+
+**By the numbers:**
+- **2 hours 49 minutes** wall time start to finish
+- **609 agent turns** across 9 tasks
+- **4,417 lines of Go** produced by agents
+- **9 tasks** (5 implementation + 4 fixes), fully sequential DAG
+- **0 human code commits**
+
 This is not a human-authored codebase. go-leiden is built entirely by **autonomous AI agents** orchestrated by [OpenPraxis](https://github.com/k8nstantin/OpenPraxis) — a peer-to-peer workflow engine for autonomous coding agents.
 
 ### The product DAG
