@@ -168,25 +168,32 @@ Product: go-leiden
 ├─ Skill: Senior Developer Coding Practices
 ├─ Skill: Open-Source Go Library Engineering
 │
-├─ M1 — Core data structures
+├─ M1 — Core data structures                         47 turns
 │    CompactNetwork (CSR adjacency list), Clustering, Edge types, errors
-│    └─ T1: Implement CompactNetwork, Clustering, Edge, errors
 │         ↓
-├─ M2 — Algorithm phases
-│    Local-move phase, refinement phase (Leiden innovation), aggregation loop
-│    └─ T1: Implement three algorithm phases
+├─ M2 — Algorithm phases                             57 turns
+│    Local-move, refinement (Leiden innovation), aggregation
 │         ↓
-├─ M3 — Quality functions
+├─ M3 — Quality functions                            76 turns
 │    Modularity, CPM, resolution scaling (corrected formula)
-│    └─ T1: Implement Modularity and CPM
 │         ↓
-├─ M4 — Public API
-│    Leiden(), HierarchicalLeiden(), go.mod, README
-│    └─ T1: Implement public API + module setup
+├─ M4 — Public API                                   65 turns
+│    Leiden(), HierarchicalLeiden(), GroupBy(), go.mod
 │         ↓
-└─ M5 — Test suite
-     Karate club validation, 10k-node benchmarks, fuzz testing
-     └─ T1: Write tests, benchmarks, fuzz
+├─ M5 — Tests + benchmarks                          106 turns  ← hardest
+│    Karate club validation, 10k benchmarks, fuzz testing
+│         ↓
+├─ M6/T1 — Fix 3 blocking review issues              43 turns
+│    Module path, self-loop doc, stale package comment
+│         ↓
+├─ M6/T2 — context.Context + helpers                112 turns  ← hardest fix
+│    API cancellation, GroupBy(), CommunityCount()
+│         ↓
+├─ M6/T3 — Copyright + examples                      57 turns
+│    Headers on all files, ExampleLeiden, zero-value test
+│         ↓
+└─ M6/T4 — CI + release                              46 turns
+     .github/workflows, CHANGELOG, CONTRIBUTING, v0.1.0
 ```
 
 Each manifest maps to a GitHub issue. Each task carries a cascading prompt:
