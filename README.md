@@ -260,6 +260,31 @@ Each step is a manifest — one branch, one PR, one review before the next fires
 
 ---
 
+
+## Build stats
+
+This library was built entirely by autonomous AI agents on [OpenPraxis](https://github.com/k8nstantin/OpenPraxis). No human code commits.
+
+| | |
+|---|---|
+| **Total build time** | 2 hours 49 minutes |
+| **Agent turns** | 609 |
+| **Lines of Go** | 4,417 |
+| **Tasks** | 9 sequential (5 implementation + 4 review fixes) |
+| **Human code commits** | 0 |
+
+| Task | What | Turns |
+|---|---|---|
+| M1 | Core data structures — CompactNetwork, Clustering, Edge | 47 |
+| M2 | Algorithm phases — local-move, refinement, aggregation | 57 |
+| M3 | Quality functions — Modularity, CPM | 76 |
+| M4 | Public API — Leiden(), HierarchicalLeiden(), GroupBy() | 65 |
+| M5 | Tests, benchmarks, fuzz validation | 106 |
+| M6/T1 | Fix 3 blocking PR review issues | 43 |
+| M6/T2 | context.Context + GroupBy/CommunityCount | 112 |
+| M6/T3 | Copyright headers + example tests | 57 |
+| M6/T4 | CI + CHANGELOG + CONTRIBUTING + release prep | 46 |
+
 ## Credits
 
 This library would not exist without:
