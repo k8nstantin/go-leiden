@@ -8,7 +8,7 @@ title: go-leiden — How We Build It
 **The native Go implementation of the Leiden community detection algorithm.**  
 Built entirely by autonomous AI agents. Zero human code commits.
 
-**v0.1.0 — the first synthetic Go library.** 609 turns · 2h 49m wall-clock · 4,417 lines of Go · ported from [graspologic-native](https://github.com/graspologic-org/graspologic-native) (Rust, Microsoft Research).
+**v0.1.0 — the first synthetic Go library.** 609 turns · 2h 49m wall-clock · 4,340 lines of Go · ported from [graspologic-native](https://github.com/graspologic-org/graspologic-native) (Rust, Microsoft Research).
 
 → [GitHub Repository](https://github.com/k8nstantin/go-leiden) · [OpenPraxis](https://github.com/k8nstantin/OpenPraxis)
 
@@ -85,7 +85,7 @@ The agent running M2/T1 knows: the product it's contributing to, where M2 fits i
 | [M5](manifests/m5) | Test suite | [#5](https://github.com/k8nstantin/go-leiden/issues/5) | ✅ Completed |
 | M6 | PR #6 review-fix iteration | (in PR #6 / #7) | ✅ Completed |
 
-**Totals:** 609 agent turns · 2h 49m wall-clock · 4,417 lines of Go · 0 human commits.
+**Totals:** 609 agent turns · 2h 49m wall-clock · 4,340 lines of Go · 0 human commits.
 
 ---
 

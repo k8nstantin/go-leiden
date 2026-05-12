@@ -23,7 +23,7 @@ The agentic OS reading the [graspologic-native](https://github.com/graspologic-o
 |---|---|
 | Agent turns (M1–M5) | **609** |
 | Wall-clock time | **2h 49m** |
-| Lines of Go produced | **4,417** |
+| Lines of Go produced | **4,340** |
 | Human code commits | **0** |
 | Manifests | 5 (`M1` → `M5`) + 1 review-fix iteration (`M6`) |
 | Source library ported | [graspologic-native](https://github.com/graspologic-org/graspologic-native) (Rust, Microsoft Research) |
@@ -31,6 +31,7 @@ The agentic OS reading the [graspologic-native](https://github.com/graspologic-o
 
 This is not a hand-written library with AI assistance, and it is not an AI-generated snippet. It is a complete, tested, published Go module — manifest DAG, cascading prompts, refinement-from-singletons per Traag (2019), karate-club validation, fuzz tests — built autonomously and verified by an independent server-side audit the agents could not see.
 
+→ **[Read the full case study →](docs/CASE_STUDY.md)** — definitions, method, build run, verification, honest caveats (commit-author rewrite, human review role), prior art.
 → [How the build worked, manifest by manifest](#how-this-library-is-built--autonomous-ai-agents) · [The product DAG image](#the-product-dag)
 
 ---
@@ -279,7 +280,7 @@ This is recursive: we built a feedback loop to improve autonomous agents, and th
 
 This project answered a specific question: **can autonomous agents build a production-quality, ecosystem-ready Go library — from algorithm specification to published package — without human code commits?**
 
-**v0.1.0 is the answer: yes.** 609 turns, 2h 49m wall-clock, 4,417 lines of Go, zero human commits, karate-club modularity in the expected range, fuzz tests pass.
+**v0.1.0 is the answer: yes.** 609 turns, 2h 49m wall-clock, 4,340 lines of Go, zero human commits, karate-club modularity in the expected range, fuzz tests pass.
 
 ---
 
@@ -296,7 +297,7 @@ Each step was a manifest — one branch, one PR, one review before the next fire
 | [M5 — Tests + benchmarks](docs/manifests/m5.md) | Karate club validation, 10k-node benchmarks, fuzz testing. The publication gate. | [T1 — Write test suite](docs/manifests/m5.md#task-t1--write-test-suite-benchmarks-fuzz-tests) | [#5](https://github.com/k8nstantin/go-leiden/issues/5) | ✅ Completed |
 | M6 — PR review fixes | Address all findings from senior-architect code review of PR #6: refinement formula correctness, doc.go completeness, comment accuracy, library hygiene. | T1 — Implement review fixes | (in PR #6 / #7) | ✅ Completed |
 
-**Totals:** 609 turns · 2h 49m wall-clock · 4,417 lines of Go · 0 human code commits · `v0.1.0` released as `github.com/k8nstantin/go-leiden`.
+**Totals:** 609 turns · 2h 49m wall-clock · 4,340 lines of Go · 0 human code commits · `v0.1.0` released as `github.com/k8nstantin/go-leiden`.
 
 → [How autonomous agents build this — prompts, DAG, feedback loop](docs/index.md)
 
