@@ -7,7 +7,7 @@
 
 > **Status: Active development**
 
-**→ [Build Process & Manifest Specs](https://k8nstantin.github.io/go-leiden)** — read how autonomous agents are building this library — built entirely by autonomous AI agents on [OpenPraxis](https://github.com/k8nstantin/OpenPraxis). No human code commits.
+Built entirely by autonomous AI agents on [OpenPraxis](https://github.com/k8nstantin/OpenPraxis). No human code commits.
 
 **The first and only native Go implementation of the Leiden community detection algorithm.**
 
