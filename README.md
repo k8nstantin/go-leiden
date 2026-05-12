@@ -56,6 +56,33 @@ We chose graspologic-native over the original [leidenalg](https://github.com/vtr
 
 ---
 
+## Prior art in Go
+
+go-leiden is **not** the first Go module published under the name "leiden." Two earlier repositories show up on `pkg.go.dev`:
+
+- **[`github.com/vsuryav/leiden-go`](https://github.com/vsuryav/leiden-go)** (Nov 2025, MIT) — a Go community-detection package that targets the Leiden algorithm. ~17 KB across three files, adjacency-map graph representation (`map[string]map[string]float64`), modularity-only quality function.
+- **[`github.com/bloodmagesoftware/leiden`](https://github.com/bloodmagesoftware/leiden)** (Jun 2024, AGPL-3.0) — unrelated to the algorithm.
+
+We acknowledge `leiden-go` as the earlier publication. The two implementations differ substantively in scope and fidelity to the Traag, Waltman & van Eck (2019) paper. Honest comparison:
+
+| | leiden-go | **go-leiden** |
+|---|---|---|
+| Graph representation | adjacency map (`map[string]map[string]float64`) | **CSR `CompactNetwork`** (int-indexed, cache-friendly) |
+| Quality functions | Modularity | **Modularity + CPM** |
+| Refinement phase | BFS connectivity check on the full community, then local moves on existing nodes | **Refinement-from-singletons** per Traag (2019) eqs (14)(15), with well-connectedness γ-test |
+| Aggregation phase | Not implemented (source comment: *"in practice, we track this across iterations"*) | **Full aggregation** — communities collapse to super-nodes; recursive |
+| Hierarchical Leiden | — | **`HierarchicalLeiden`** with `MaxClusterSize` (the GraphRAG use case) |
+| Randomness | global `rand.Seed` (deprecated as of Go 1.20) | per-call `*rand.Rand` instance |
+| Cancellation | — | `context.Context` throughout |
+| Validation | unit tests | unit + benchmarks + fuzz, karate-club modularity in [0.35, 0.45] |
+| Dependencies | zero | **zero** |
+
+The differences matter where they matter. For small graphs and exploratory work, `leiden-go` will produce reasonable partitions. For knowledge graphs, GraphRAG-style chunking, or any downstream system that depends on Leiden's well-connectedness *guarantee* (the entire reason the algorithm exists), you need the refinement-from-singletons construction and the aggregation phase. That is what go-leiden ports from `graspologic-native`.
+
+If your needs are met by `leiden-go`, use it.
+
+---
+
 ## Installation
 
 ```bash
