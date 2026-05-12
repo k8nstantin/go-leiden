@@ -1,0 +1,5 @@
+title: go-leiden
+description: First native Go implementation of the Leiden community detection algorithm — built by autonomous AI agents
+theme: jekyll-theme-midnight
+url: https://k8nstantin.github.io/go-leiden
+show_downloads: true

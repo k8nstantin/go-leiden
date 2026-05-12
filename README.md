@@ -5,7 +5,9 @@
 [![Go Version](https://img.shields.io/badge/go-1.22+-blue.svg)](https://golang.org/)
 [![Built Autonomously](https://img.shields.io/badge/built%20by-AI%20agents-blueviolet)](https://github.com/k8nstantin/OpenPraxis)
 
-> **Status: Active development** — built entirely by autonomous AI agents on [OpenPraxis](https://github.com/k8nstantin/OpenPraxis). No human code commits.
+> **Status: Active development**
+
+**→ [Build Process & Manifest Specs](https://k8nstantin.github.io/go-leiden)** — read how autonomous agents are building this library — built entirely by autonomous AI agents on [OpenPraxis](https://github.com/k8nstantin/OpenPraxis). No human code commits.
 
 **The first and only native Go implementation of the Leiden community detection algorithm.**
 
@@ -229,11 +231,11 @@ go-leiden is the answer in progress. The algorithm is well-specified (graspologi
 
 | # | Manifest | Component | Status |
 |---|---|---|---|
-| M1 | Core data structures | CompactNetwork, Clustering, Edge | 🔄 In progress |
-| M2 | Algorithm phases | local-move, refinement, aggregation | ⏳ Pending M1 |
-| M3 | Quality functions | Modularity, CPM | ⏳ Pending M2 |
-| M4 | Public API | Leiden(), HierarchicalLeiden(), go.mod | ⏳ Pending M3 |
-| M5 | Test suite | Validation, benchmarks, fuzz | ⏳ Pending M4 |
+| [M1](https://k8nstantin.github.io/go-leiden/manifests/m1) | Core data structures | CompactNetwork, Clustering, Edge | 🔄 In progress |
+| [M2](https://k8nstantin.github.io/go-leiden/manifests/m2) | Algorithm phases | local-move, refinement, aggregation | ⏳ Pending M1 |
+| [M3](https://k8nstantin.github.io/go-leiden/manifests/m3) | Quality functions | Modularity, CPM | ⏳ Pending M2 |
+| [M4](https://k8nstantin.github.io/go-leiden/manifests/m4) | Public API | Leiden(), HierarchicalLeiden(), go.mod | ⏳ Pending M3 |
+| [M5](https://k8nstantin.github.io/go-leiden/manifests/m5) | Test suite | Validation, benchmarks, fuzz | ⏳ Pending M4 |
 
 GitHub issues: [#1 M1](../../issues/1) · [#2 M2](../../issues/2) · [#3 M3](../../issues/3) · [#4 M4](../../issues/4) · [#5 M5](../../issues/5)
 
