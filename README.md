@@ -3,7 +3,9 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/k8nstantin/go-leiden.svg)](https://pkg.go.dev/github.com/k8nstantin/go-leiden)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Go Version](https://img.shields.io/badge/go-1.22+-blue.svg)](https://golang.org/)
-> **Status: Active development** — built autonomously by AI agents on [OpenPraxis](https://github.com/k8nstantin/OpenPraxis).
+[![Built Autonomously](https://img.shields.io/badge/built%20by-AI%20agents-blueviolet)](https://github.com/k8nstantin/OpenPraxis)
+
+> **Status: Active development** — built entirely by autonomous AI agents on [OpenPraxis](https://github.com/k8nstantin/OpenPraxis). No human code commits.
 
 **The first and only native Go implementation of the Leiden community detection algorithm.**
 
@@ -35,7 +37,7 @@ In practice, for code knowledge graphs and document corpora, the difference is t
 
 ## Why this implementation?
 
-We port from **[graspologic-native](https://github.com/graspologic-org/graspologic-native)** (Microsoft Research + Johns Hopkins University, MIT license) — the Rust implementation used in production by **[Microsoft GraphRAG](https://github.com/microsoft/graphrag)**, the knowledge graph extraction pipeline.
+We port from **[graspologic-native](https://github.com/graspologic-org/graspologic-native)** (Microsoft Research + Johns Hopkins University, MIT license) — the Rust implementation used in production by **[Microsoft GraphRAG](https://github.com/microsoft/graphrag)**.
 
 We chose graspologic-native over the original [leidenalg](https://github.com/vtraag/leidenalg) (C++ + igraph) because:
 
@@ -49,39 +51,6 @@ We chose graspologic-native over the original [leidenalg](https://github.com/vtr
 | Resolution formula | Reference impl | Corrected¹ | **Corrected¹** |
 
 > ¹ graspologic-native identified and corrected a resolution scaling bug in the original CWTSLeiden Java reference implementation. go-leiden uses the corrected formula.
-
----
-
-## What we are building
-
-go-leiden is a **standalone, importable Go library** with three public functions:
-
-```go
-// Leiden partitions a graph into well-connected communities.
-func Leiden(edges []Edge, opts Options) (Result, error)
-
-// HierarchicalLeiden recursively sub-clusters large communities.
-// Used by Microsoft GraphRAG for knowledge graph partitioning.
-func HierarchicalLeiden(edges []Edge, opts HierarchicalOptions) ([]HierarchicalCluster, error)
-
-// Modularity scores an existing partition without running clustering.
-func Modularity(edges []Edge, communities map[string]int, resolution float64) float64
-```
-
-### Algorithm
-
-Three phases per iteration:
-
-**Phase 1 — Local Move:** Greedy quality improvement. Each node tries to move to the neighboring cluster that maximises the quality function (Modularity or CPM). Nodes whose neighbors changed are re-evaluated.
-
-**Phase 2 — Refinement** *(the Leiden innovation)*: Within each Phase 1 community, the algorithm restarts from singleton subclusters and stochastically merges them. This phase guarantees that communities are well-connected — Louvain has no equivalent step.
-
-**Phase 3 — Aggregation:** Communities are contracted into super-nodes. The algorithm recurses on the induced network until no improvement is possible.
-
-### Quality functions
-
-- **Modularity** (default): measures how much within-community edge density exceeds random expectation. Resolution parameter controls granularity.
-- **CPM** (Constant Potts Model): measures internal density against a fixed threshold. Useful when communities are expected to have uniform density.
 
 ---
 
@@ -108,16 +77,13 @@ import (
 func main() {
     // Two tight clusters connected by a weak bridge
     edges := []leiden.Edge{
-        // Cluster A
-        {Source: "auth.Login", Target: "auth.Verify",   Weight: 1.0},
-        {Source: "auth.Login", Target: "auth.Session",  Weight: 1.0},
-        {Source: "auth.Verify", Target: "auth.Session", Weight: 1.0},
-        // Cluster B
-        {Source: "db.Query",  Target: "db.Connect",  Weight: 1.0},
-        {Source: "db.Query",  Target: "db.Cache",    Weight: 1.0},
-        {Source: "db.Connect", Target: "db.Cache",   Weight: 1.0},
-        // Weak bridge
-        {Source: "auth.Session", Target: "db.Connect", Weight: 0.05},
+        {Source: "auth.Login",   Target: "auth.Verify",   Weight: 1.0},
+        {Source: "auth.Login",   Target: "auth.Session",  Weight: 1.0},
+        {Source: "auth.Verify",  Target: "auth.Session",  Weight: 1.0},
+        {Source: "db.Query",     Target: "db.Connect",    Weight: 1.0},
+        {Source: "db.Query",     Target: "db.Cache",      Weight: 1.0},
+        {Source: "db.Connect",   Target: "db.Cache",      Weight: 1.0},
+        {Source: "auth.Session", Target: "db.Connect",    Weight: 0.05}, // weak bridge
     }
 
     result, err := leiden.Leiden(edges, leiden.DefaultOptions())
@@ -125,17 +91,12 @@ func main() {
         panic(err)
     }
 
-    fmt.Printf("Found %d communities (quality: %.4f)\n",
-        len(uniqueClusters(result.Partition)), result.Quality)
+    fmt.Printf("Quality: %.4f\n", result.Quality)
     for node, cluster := range result.Partition {
-        fmt.Printf("  %s → cluster %d\n", node, cluster)
+        fmt.Printf("  %-20s → cluster %d\n", node, cluster)
     }
-}
-
-func uniqueClusters(p map[string]int) map[int]struct{} {
-    m := make(map[int]struct{})
-    for _, c := range p { m[c] = struct{}{} }
-    return m
+    // auth.* → cluster 0
+    // db.*   → cluster 1
 }
 ```
 
@@ -145,11 +106,11 @@ func uniqueClusters(p map[string]int) map[int]struct{} {
 
 ```go
 opts := leiden.Options{
-    Resolution:  1.0,            // community granularity; higher = more, smaller communities
-    Randomness:  0.001,          // refinement stochasticity; 0 = deterministic greedy
-    Iterations:  2,              // full passes over the network
-    Trials:      1,              // run N times, return best quality (use >1 with Seed=0)
-    Seed:        42,             // 0 = random seed; >0 = fully deterministic
+    Resolution:  1.0,               // community granularity; higher = more, smaller communities
+    Randomness:  0.001,             // refinement stochasticity; 0 = deterministic greedy
+    Iterations:  2,                 // full passes over the network
+    Trials:      1,                 // run N times, return best quality
+    Seed:        42,                // 0 = random; >0 = fully deterministic
     Quality:     leiden.Modularity, // or leiden.CPM
 }
 ```
@@ -158,32 +119,123 @@ opts := leiden.Options{
 
 ## Hierarchical Leiden
 
-For large graphs where communities need to stay under a size limit (e.g. knowledge graph chunks for LLM context windows):
+For large graphs where communities need to stay under a size limit (e.g. knowledge graph chunks for LLM context windows — the use case in Microsoft GraphRAG):
 
 ```go
 result, err := leiden.HierarchicalLeiden(edges, leiden.HierarchicalOptions{
     Options:        leiden.DefaultOptions(),
-    MaxClusterSize: 50, // recursively sub-cluster any community > 50 nodes
+    MaxClusterSize: 50,
 })
 
 for _, hc := range result {
     if hc.IsFinal {
-        fmt.Printf("node=%s cluster=%d level=%d\n", hc.Node, hc.Cluster, hc.Level)
+        fmt.Printf("node=%-20s cluster=%d level=%d\n", hc.Node, hc.Cluster, hc.Level)
     }
 }
 ```
 
 ---
 
-## Build plan
+## How this library is built — autonomous AI agents
 
-| Manifest | Component | Status |
-|---|---|---|
-| M1 | Core data structures (CompactNetwork, Clustering, Edge) | 🔄 In progress |
-| M2 | Algorithm phases (local-move, refinement, aggregation) | ⏳ Pending M1 |
-| M3 | Quality functions (Modularity, CPM) | ⏳ Pending M1 |
-| M4 | Public API + go.mod + README | ⏳ Pending M2+M3 |
-| M5 | Tests, benchmarks, fuzz, validation | ⏳ Pending M4 |
+This is not a human-authored codebase. go-leiden is built entirely by **autonomous AI agents** orchestrated by [OpenPraxis](https://github.com/k8nstantin/OpenPraxis) — a peer-to-peer workflow engine for autonomous coding agents.
+
+### The product DAG
+
+Every component is modelled as an entity in the OpenPraxis graph. The build is a directed acyclic graph of manifests (components) and tasks (implementation units):
+
+```
+Product: go-leiden
+├─ Skill: Senior Developer Coding Practices
+├─ Skill: Open-Source Go Library Engineering
+│
+├─ M1 — Core data structures
+│    CompactNetwork (CSR adjacency list), Clustering, Edge types, errors
+│    └─ T1: Implement CompactNetwork, Clustering, Edge, errors
+│         ↓
+├─ M2 — Algorithm phases
+│    Local-move phase, refinement phase (Leiden innovation), aggregation loop
+│    └─ T1: Implement three algorithm phases
+│         ↓
+├─ M3 — Quality functions
+│    Modularity, CPM, resolution scaling (corrected formula)
+│    └─ T1: Implement Modularity and CPM
+│         ↓
+├─ M4 — Public API
+│    Leiden(), HierarchicalLeiden(), go.mod, README
+│    └─ T1: Implement public API + module setup
+│         ↓
+└─ M5 — Test suite
+     Karate club validation, 10k-node benchmarks, fuzz testing
+     └─ T1: Write tests, benchmarks, fuzz
+```
+
+Each manifest maps to a GitHub issue. Each task carries a cascading prompt:
+
+```
+Product prompt  →  "what are we building, why, module path, reference"
+  ↓
+Manifest prompt →  "this component's role, dependencies, deliverables"
+  ↓
+Task prompt     →  "exact types, function signatures, formulas, reference files to read"
+  ↓
+Skill prompts   →  "Go library standards, testing conventions, zero-dep rules"
+```
+
+The agent that runs M2/T1 knows: the product it's contributing to, where M2 fits in the chain, the exact graspologic-native Rust files to read before writing a line, and the precise QVI formula to implement. It doesn't guess — it executes from a precise spec.
+
+### The Trace-Grounded Feedback Loop
+
+go-leiden is built on top of a feedback system we built into OpenPraxis itself: the **[Trace-Grounded Feedback Loop](https://github.com/k8nstantin/OpenPraxis)**.
+
+Three capabilities activate automatically for every task run:
+
+**1. Prior context injection**
+Every agent run sees its own history. If T2 (algorithm phases) fails and retries, the agent sees the prior run's execution trace, the tool calls it made, and the error it hit. It cannot repeat the same mistake blind. This is especially critical for M2's weight cache correctness — the hardest part of the port.
+
+**2. Pass-rate tracking**
+`GET /api/execution/frontier` tracks pass rates per task and per manifest. If M3's quality function math is wrong, the pass rate drops and we see it before it propagates to M4's public API.
+
+**3. Autonomous proposer loop**
+When a task hits 2 consecutive non-transient failures (`max_turns` or `deliverable_missing`), the system automatically fires a **proposer task** that analyzes the failure pattern and generates an improved prompt. The improved prompt is tested against the pass rate and kept only if it improves by ≥5%. The prompts self-improve without human intervention.
+
+```
+T2 fails (weight cache wrong)
+  ↓
+T2 fails again (same root cause, different expression)
+  ↓
+Proposer fires automatically
+  ↓
+Proposer analyzes: "agent misses the clusterWeights cache update on node removal"
+  ↓
+Proposer generates sharper prompt: adds explicit warning about cache invariants
+  ↓
+New prompt tested: pass rate improves → kept
+  ↓
+T2 retries with improved prompt → succeeds
+```
+
+This is recursive: we built a feedback loop to improve autonomous agents, and that same loop is now building this open-source library. go-leiden is a live demonstration of the system.
+
+### Why this matters
+
+This project answers a specific question: **can autonomous agents build a production-quality, ecosystem-ready Go library — from algorithm specification to published package — without human code commits?**
+
+go-leiden is the answer in progress. The algorithm is well-specified (graspologic-native Rust source), the test target is clear (karate club graph, graspologic-native output), and the quality bar is measurable (go test, go vet, benchmarks). If the agents can ship a correct, performant, zero-dependency Leiden implementation that the Go community will actually import, the answer is yes.
+
+---
+
+## Build status
+
+| # | Manifest | Component | Status |
+|---|---|---|---|
+| M1 | Core data structures | CompactNetwork, Clustering, Edge | 🔄 In progress |
+| M2 | Algorithm phases | local-move, refinement, aggregation | ⏳ Pending M1 |
+| M3 | Quality functions | Modularity, CPM | ⏳ Pending M2 |
+| M4 | Public API | Leiden(), HierarchicalLeiden(), go.mod | ⏳ Pending M3 |
+| M5 | Test suite | Validation, benchmarks, fuzz | ⏳ Pending M4 |
+
+GitHub issues: [#1 M1](../../issues/1) · [#2 M2](../../issues/2) · [#3 M3](../../issues/3) · [#4 M4](../../issues/4) · [#5 M5](../../issues/5)
 
 ---
 
@@ -191,17 +243,17 @@ for _, hc := range result {
 
 This library would not exist without:
 
-- **[Traag, Waltman & van Eck (2019)](https://arxiv.org/abs/1810.08473)** — *From Louvain to Leiden: guaranteeing well-connected communities.* Scientific Reports 9, 5233. The algorithm itself.
+- **[Traag, Waltman & van Eck (2019)](https://arxiv.org/abs/1810.08473)** — *From Louvain to Leiden: guaranteeing well-connected communities.* Scientific Reports 9, 5233. The algorithm.
 
 - **[leidenalg](https://github.com/vtraag/leidenalg)** by Vincent Traag — the original C++ + Python implementation. The authoritative reference for algorithm correctness. MIT license.
 
 - **[graspologic-native](https://github.com/graspologic-org/graspologic-native)** by Microsoft Research and Johns Hopkins University — the Rust implementation we port from. Self-contained (no igraph), production-proven in Microsoft GraphRAG. MIT license.
 
-- **[CWTSLeiden/networkanalysis](https://github.com/CWTSLeiden/networkanalysis)** — the Java reference implementation by the original authors. The shared algorithmic ancestor of both leidenalg and graspologic-native.
+- **[CWTSLeiden/networkanalysis](https://github.com/CWTSLeiden/networkanalysis)** — the Java reference implementation by the original authors.
 
-- **[Graphify](https://graphify.net)** — the inspiration for applying Leiden to code knowledge graphs. 47,000 GitHub stars in 5 weeks (Python). go-leiden is the Go-native answer.
+- **[Graphify](https://graphify.net)** — the open-source Python code knowledge graph tool (47k GitHub stars) that inspired this library's application to code analysis.
 
-- **[OpenPraxis](https://github.com/k8nstantin/OpenPraxis)** — the autonomous agent workflow engine that built this library. go-leiden is a case study in fully autonomous open-source library development.
+- **[OpenPraxis](https://github.com/k8nstantin/OpenPraxis)** — the autonomous agent workflow engine that is building this library. The Trace-Grounded Feedback Loop, the product DAG, the cascading prompts — all OpenPraxis.
 
 ---
 
@@ -209,4 +261,4 @@ This library would not exist without:
 
 MIT License. See [LICENSE](LICENSE).
 
-Built with [OpenPraxis](https://github.com/k8nstantin/OpenPraxis).
+Built with [OpenPraxis](https://github.com/k8nstantin/OpenPraxis) — autonomous agents, self-improving prompts, zero human code commits.
